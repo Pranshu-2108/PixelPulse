@@ -26,15 +26,15 @@ const ProfilePage = ({ searchParams }: SearchParamProps) => {
   const UploadPhotoHandler = async (e: any) => {
     console.log(e.target.files);
     const file = e.target.files?.[0];
-    console.log(user)
+    console.log(user);
     const obj = {
       file,
-      user
-    }
-    await upload(obj, (link : any) => {
+      user,
+    };
+    await upload(obj, (link: any) => {
       setProfileImg(link);
       router.refresh();
-    })
+    });
   };
 
   const [user, setUser] = useState({} as any);
@@ -42,8 +42,10 @@ const ProfilePage = ({ searchParams }: SearchParamProps) => {
   const [images, setImages] = useState([] as any);
 
   const [loading, setLoading] = useState(true);
-  
-  const [profileImg, setProfileImg] = useState('/assets/images/profilePlaceholder.png');
+
+  const [profileImg, setProfileImg] = useState(
+    "/assets/images/profilePlaceholder.png"
+  );
 
   useEffect(() => {
     setLoading(true);
@@ -52,10 +54,9 @@ const ProfilePage = ({ searchParams }: SearchParamProps) => {
       setUser(response.data.user);
       setImages(response.data.images);
       let res = await axios.get("api/user/avatar");
-      if(res.data)
-        {console.log(res.data);setProfileImg(res.data);}
-      else
-      setProfileImg('/assets/images/profilePlaceholder.png');
+      if (res.data) {
+        setProfileImg(res.data);
+      } else setProfileImg("/assets/images/profilePlaceholder.png");
       setLoading(false);
     };
     fetchData();
@@ -88,30 +89,51 @@ const ProfilePage = ({ searchParams }: SearchParamProps) => {
 
                   </input>
                 </form> */}
-                <form action="/upload" method="post" name="Profileform" id="ProfileId" encType="multipart/form-data">
+                <form
+                  action="/upload"
+                  method="post"
+                  name="Profileform"
+                  id="ProfileId"
+                  encType="multipart/form-data"
+                >
                   <label htmlFor="input-image" className="w-[200] h-[200]">
                     <div className="ml-4 rounded-full overflow-hidden aspect-square w-[200] h-[200] mt-2">
-                      <Image alt='profile-img' src={profileImg} width={200} height={200} className="object-cover cursor-pointer">
-                      
-                      </Image>
+                      <Image
+                        alt="profile-img"
+                        src={profileImg}
+                        width={200}
+                        height={200}
+                        className="object-cover cursor-pointer"
+                      ></Image>
                     </div>
                   </label>
-                  <input type="file" id="input-image" className="hidden" onChange={UploadPhotoHandler}>
-
-                  </input>
+                  <input
+                    type="file"
+                    id="input-image"
+                    className="hidden"
+                    onChange={UploadPhotoHandler}
+                  ></input>
                 </form>
                 <div className="mx-auto mt-16">
-                  <p className="text-xl font-semibold">{user.firstName} {user.lastName}</p>
+                  <p className="text-xl font-semibold">
+                    {user.firstName} {user.lastName}
+                  </p>
                   <p className="text-md mt-3">{user.email}</p>
                 </div>
               </div>
               <div className="mt-4 flex gap-2">
-                  <Button className="mx-3 mt-4 w-[50%] py-5 px-2" onClick={UploadPhotoHandler}>
-                    Logout
-                  </Button>
-                  <Button className="mx-3 mt-4 w-[50%] py-5 px-2 hover:bg-red-600" onClick={UploadPhotoHandler}>
-                    Delete 
-                  </Button>
+                <Button
+                  className="mx-3 mt-4 w-[50%] py-5 px-2"
+                  onClick={logoutHandler}
+                >
+                  Logout
+                </Button>
+                <Button
+                  className="mx-3 mt-4 w-[50%] py-5 px-2 hover:bg-red-600"
+                  onClick={deleteHandler}
+                >
+                  Delete
+                </Button>
               </div>
             </div>
           </div>
@@ -161,15 +183,6 @@ const ProfilePage = ({ searchParams }: SearchParamProps) => {
           page={page}
         />
       </section>
-
-      <div className="mt-6">
-        <Button className="m-2" onClick={logoutHandler}>
-          Logout
-        </Button>
-        <Button className="m-2" onClick={deleteHandler}>
-          Delete
-        </Button>
-      </div>
     </>
   );
 };

@@ -26,6 +26,10 @@ const UserSchema = new Schema({
     type: Number,
     default: 10,
   },
+  image: {
+    type: String,
+    default: "/assets/images/profilePlaceholder.png",
+  }
 });
 
 const User = models?.User || model("User", UserSchema);

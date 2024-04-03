@@ -15,12 +15,17 @@ const Login = () => {
       password : "",
   });
 
+  const [loading, setLoading] = useState(false);
+
+  const [error, setError] = useState("");
+
   const router = useRouter();
   
   const onSubmitHandler = async (e : any) => {
       
       try {
         e.preventDefault();
+        setLoading(true);
         const response = await axios.post("/api/user/login", user);
         console.log("Login success", response.data);
         console.log("navigating");
@@ -28,6 +33,8 @@ const Login = () => {
 
       } catch (error : any) {
         console.log("Login Failed", error.message);
+        setError("Invalid username or password");
+        setLoading(false);
       }
   }
 
@@ -38,11 +45,12 @@ const Login = () => {
             <Input type="email" id="email" placeholder="Email" onChange={(e : any) => setUser({...user, email : e.target.value})}/>
             <Input type="password" id="password" placeholder="Password" onChange={(e : any) => setUser({...user, password : e.target.value})}/>
             <div>
-              <Button type="submit" className='w-full mb-4'>Submit</Button>
+              <Button type="submit" className='w-full mb-4'>{loading ? "Submitting..." : "Submit"}</Button>
               <div className='flex text-[13px] mb-2 text-center mx-auto'>
                 <p className='ml-1 font-semibold'>Don&apos;t have an account?</p>
                 <span className='ml-2 mr-1 text-blue-500 font-semibold'><a href="/signup">Sign Up</a></span>
               </div>
+              <div className='text-red-500 text-sm ml-1'>{error ? error : ""}</div>
             </div>
         </form>
     </div>

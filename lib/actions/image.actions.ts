@@ -22,7 +22,7 @@ export async function addImage({ image, userEmail, path }: AddImageParams) {
   try {
     await connectToDatabase();
     const author = await User.findOne({email : userEmail});
-    console.log(author);
+    
     if (!author) {
       throw new Error("User not found");
     }
@@ -33,7 +33,7 @@ export async function addImage({ image, userEmail, path }: AddImageParams) {
     })
 
     revalidatePath(path);
-
+    
     return JSON.parse(JSON.stringify(newImage));
   } catch (error) {
     handleError(error)

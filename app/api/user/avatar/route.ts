@@ -1,6 +1,8 @@
+import User from "@/lib/database/models/user.model";
 import {PutObjectCommand, S3Client} from "@aws-sdk/client-s3";
 import jwt from "jsonwebtoken";
 import { revalidatePath } from "next/cache";
+import uniqid from "uniqid";
 
 export async function POST(req : any) {
   const formData = await req.formData();
@@ -15,8 +17,9 @@ export async function POST(req : any) {
       },
     });
     const email = formData.get('user');
+    const randomId = uniqid();
     const ext = 'png';
-    const newFilename = email + '.' + ext;
+    const newFilename = randomId + '.' + ext;
     const bucketName = process.env.BUCKET_NAME;
 
     const chunks = [];
@@ -33,6 +36,11 @@ export async function POST(req : any) {
     }));
 
     const link = `https://${bucketName}.s3.amazonaws.com/${newFilename}`;
+
+    const res = await User.findOneAndUpdate(
+      { email : email },
+      { image: link },
+    )
 
     return Response.json(link);
   }
@@ -52,7 +60,9 @@ export async function GET(req : any) {
     const ext = 'png';
     const newFilename = email + '.' + ext;
     const bucketName = process.env.BUCKET_NAME;
-    const link = `https://${bucketName}.s3.amazonaws.com/${newFilename}`;
+    //User.updateOne()
+    const res = await User.findOne({email : email})
+    const link = res.image;
 
     return Response.json(link);
 }
